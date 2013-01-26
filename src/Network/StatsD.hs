@@ -9,6 +9,7 @@ module Network.StatsD
 
 import Control.Monad.Writer
 import qualified Data.ByteString as BS
+import Data.List
 import qualified Data.Text.Lazy as T
 import qualified Data.Text.Lazy.Encoding as T
 import Network.Socket
@@ -48,8 +49,8 @@ data Stat = Stat
     , sample    :: !(Maybe Double)
     }
 
-stat :: (Num a, Show a) => String -> a -> String -> Maybe Double -> Stat
-stat b v u = Stat (T.pack b) (T.pack (show v)) (T.pack u)
+stat :: (Num a, Show a) => [String] -> a -> String -> Maybe Double -> Stat
+stat b v u = Stat (T.pack (intercalate "." b)) (T.pack (show v)) (T.pack u)
 
 fmt prefix Stat{..} = T.concat $ execWriter $ do
     let colon = T.singleton ':'
