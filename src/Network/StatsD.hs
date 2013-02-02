@@ -4,7 +4,7 @@ module Network.StatsD
     , mkStatsD, openStatsD, closeStatsD
     
     , Stat(..), stat
-    , push
+    , push, showStat
     ) where
 
 import Control.Monad.Writer
@@ -47,10 +47,12 @@ data Stat = Stat
     , val       :: !T.Text
     , unit      :: !T.Text
     , sample    :: !(Maybe Double)
-    }
+    } deriving (Eq, Show)
 
 stat :: (Num a, Show a) => [String] -> a -> String -> Maybe Double -> Stat
 stat b v u = Stat (T.pack (intercalate "." b)) (T.pack (show v)) (T.pack u)
+
+showStat = T.unpack . fmt T.empty
 
 fmt prefix Stat{..} = T.concat $ execWriter $ do
     let colon = T.singleton ':'
