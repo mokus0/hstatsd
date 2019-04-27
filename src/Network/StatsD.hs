@@ -70,4 +70,4 @@ fmtMany prefix = map (T.encodeUtf8 . fmt prefix)
 
 push statsd = mapM_ (BL.sendAll (connection statsd)) . segment . fmtMany (prefix statsd)
 
-closeStatsD = sClose . connection
+closeStatsD = close . connection
